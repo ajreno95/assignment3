@@ -1,0 +1,9 @@
+command newCommand(char *ptr){
+	
+	
+	
+	
+	
+	
+
+}

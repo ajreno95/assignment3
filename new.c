@@ -16,6 +16,7 @@ Command *addCmd(char *input){
 
 	int count;
 	char *ptr;
+	input[strcspn(input,"\n")] = "\0"
 	Command *cmd = (Command*) malloc(sizeof(Command));
 	cmd->argA = (char**) malloc(sizeof(char*) * MAX_ARGS);
 	for(count = 0, ptr = strtok(ptr, " "); ptr!= NULL; count++, ptr = strtok(NULL, " ")){
