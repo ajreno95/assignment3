@@ -4,89 +4,76 @@
 #include <fcntl.h>
 #include <string.h>
 
-#define BUFFER 128
-#define MAX_ARGS 32
+#include "command.h"
 
+
+#define BUFFER 128
+#define ARGS 10
+#define PATH_SIZE 30
+
+
+
+
+	
+
+Command *addCmd(char *input){
+	int count;
+	char *ptr;
+	input[strcspn(input,"\n")] ='\0';
+	Command *cmd = (Command*) malloc(sizeof(Command));
+	cmd->argA = (char**) malloc(sizeof(char*) * ARGS);
+	for(count = 0, ptr = strtok(input, " "); ptr!= NULL; count++, ptr = strtok(NULL, " ")){
+		cmd->argA[count] = (char*) malloc(strlen(ptr) + 1);
+		strcpy(cmd->argA[count], ptr);
+	}
+	cmd->argL = count + 1;
+	cmd->name = cmd->argA[0];
+}
 
 
 void main() {
-  
-  int status;
- 
-  while(1){
-    printf("~$ ");
-    char input[100];
-    fgets(input, 99, stdin);
-    char *p = strtok(input,"\n ");
-    char argInput[10][100];
-    int i = 0;
+	Command *cmd;
+	char **path = (char **) malloc(sizeof(char *) * PATH_SIZE);
+	int pathL = 0;
 
-    /*
-
-      char *input;
-      char **cmd_argv;
-      int cmd_argc;
-
-      size_t buffer = BUFFER;
-      cmd_argv = (char **) malloc(sizeof(char *) * MAX_ARGS);
-
-      // save input into "input"
-
-      int count;
-      char *ptr;
-      for (count = 0, ptr = strtok(input, " "); ptr != NULL; c++, p = strtok(NULL, " ")) {
-          cmd_argv[count] = (char *) malloc(strlen(ptr) + 1);
-	  strcpy(cmd_argv[count], ptr);
-      }
-      cmd_argc = count;
-
-      // Other code...
-
-      if (cmd_argv) {
-          for (int i = 0; i < cmd_argc; i++) {
-	      free(cmd_argv[i])
-          }
-          free(cmd_argv)
-      }
-    */
-    
-    while(p != NULL){
-      printf("Input: %s\n",p);
-     
-      input[i++] = p;
-
-      p = strtok(NULL, " ");
-    }
-	printf("arg0: %s\n",argInput[0]);
- 
-    if(strcmp(argInput[0],"cd") == 0){
-      int ret = chdir(strtok(NULL, "\n "));
-	if(ret != 0){
-	  perror("Error:");
-	}
-      }
-    else if(strcmp(argInput[0],"quit") == 0){
-      break;
-    }
-    else if(strcmp(argInput[0],"path") == 0) {
-      char *mnt = strtok(NULL, "\n ");
-      if(argInput[1] == NULL) {
-	printf("Print path names\n");
-      }
-      else if(strcmp(argInput[1],"+") == 0){
-	printf("add path\n");
-      }
-      else if(strcmp(argInput[1],"-") == 0){
-	printf("remove path\n");
-      }
-      else{
-	printf("failure");
-      }
-    }
-            
-	
-    
-    
-  }
-    
+	while(1){
+		printf("~$ ");
+		char *input;
+		input = (char*) malloc(sizeof(char *)*BUFFER);
+		fgets(input,99, stdin);
+		cmd = addCmd(input);
+		
+		if(strcmp(cmd->name,"cd")==0){
+			int ret = chdir(cmd->argA[1]);
+			if(ret != 0){
+				perror("ERROR:");
+			}
+		}
+		else if(strcmp(cmd->name,"quit")==0){
+			break;
+		}
+		else if(strcmp(cmd->name,"path")==0){
+			char *check = cmd->argA[1];
+			
+			
+			if(strcmp(cmd->argA[1],"+")==0){
+				path[pathL] = (char *) malloc(sizeof(char *));
+				path[pathL] = cmd->argA[2];
+				printf("path: %d\n", pathL);
+				printf("cmd: %s\n",cmd->argA[2]);
+				printf("path: %s\n\n",path[pathL]);
+				pathL++;
+			}
+			else if(strcmp(cmd->argA[1],"-")==0){
+				printf("delete path\n");
+			}
+			else if(cmd->argL = 1){
+				//printf("pathL: %d", pathL);
+				for(int i = 0; i < pathL; i++){
+					printf("paths: %s\n", path[i]);
+				}
+			}
+			
+		}	
+	}	
 }
