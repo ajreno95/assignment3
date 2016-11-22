@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -40,6 +41,7 @@ void main() {
 		printf("~$ ");
 		char *input;
 		input = (char*) malloc(sizeof(char *)*BUFFER);
+		
 		fgets(input,99, stdin);
 		cmd = addCmd(input);
 		
@@ -50,8 +52,16 @@ void main() {
 			}
 		}
 		else if(strcmp(cmd->name,"quit")==0){
-			char* print = cmd->name + "\"
-			printf("%s",print);
+			//char *print = (char *) malloc(sizeof(char *) * BUFFER);
+			//strcpy(print,cmd->name);
+			//char slash[5] = '\';
+			//strcpy(print,slash);
+
+			char *test;
+			asprintf(&test, "%s\%s\\", cmd->name,cmd->argA[0]);
+
+			//print[strlen(cmd->name)] = '\';
+			printf("string: %s\n", test);
 			break;
 		}
 		else if(strcmp(cmd->name,"path")==0){
@@ -95,7 +105,7 @@ void main() {
 				}
 			}
 		}
-		else{
+		/*else{
 			for(int i = 0; i < pathL; i++){
 				pid = fork();
 				if(pid == 0){
@@ -104,7 +114,7 @@ void main() {
 					newPath[strlen(path[i]) + 1] = '\';
 					
 					execve("			
-		}				
+		}	*/			
 	}	
 }
 		
